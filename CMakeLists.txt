@@ -4,5 +4,4 @@ project(logger)
 set(CMAKE_CXX_STANDARD 20)
 
 add_executable(logger source/main.cpp
-        source/Logger.cpp
         source/Logger.hpp)
