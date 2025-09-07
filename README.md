@@ -26,7 +26,7 @@ int main() {
     std::string name = "Egor";
 
     // Logs "Hello Egor, value = 42"
-    logger.log<"& Hello &, value = &">(name, value);
+    logger.log<"Hello &, value = &">(name, value);
 
     // To print literal '&', use '&&'
     logger.log<"A && B & C">(100);
