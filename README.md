@@ -54,8 +54,8 @@ This project uses **CMake** to configure and build the library and examples.
 1. **Clone the repository** (if applicable)
 
     ```bash
-    git clone https://github.com/yourusername/nttp-logger.git
-    cd nttp-logger
+    git clone https://github.com/available314/logger.git
+    cd logger
     ```
 
 2. **Create a build directory**
