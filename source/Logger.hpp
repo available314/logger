@@ -8,17 +8,20 @@
 #include <cstddef>
 #include <iostream>
 #include <utility>
+#include <algorithm>
 
 
 namespace pentester {
     template<std::size_t N>
     struct NTTPString {
         static constexpr std::size_t size = N;
-        static char data[N + 1]{};
+        char data[N + 1]{};
 
-        NTTPString(const char (&s)[N + 1]) {
-            memcpy(s, data, N + 1);
+        constexpr NTTPString(const char (&s)[N + 1]) {
+            std::copy_n(s, N + 1, data);
         }
+
+        constexpr auto operator<=>(const NTTPString&) const = default;
     };
 
     template<std::size_t N> // deduction
@@ -49,16 +52,16 @@ namespace pentester {
         template<NTTPString Str, typename T, typename ...Args>
         void log_impl(std::size_t index, T&& value, Args&& ...args) {
             while (Str.data[index]) {
-                if (Str[index] == '&') {
+                if (Str.data[index] == '&') {
                     if (index + 1 < Str.size && Str.data[index + 1] == '&') [[unlikely]] {
                         index += 1;
                     } else {
-                        std::cout << value << '\n';
-                        log_impl(index + 1, std::forward<Args>(args)...);
+                        std::cout << value;
+                        log_impl<Str>(index + 1, std::forward<Args>(args)...);
                         return;
                     }
                 }
-                std::cout << Str.data[index] << '\n';
+                std::cout << Str.data[index];
 
                 index += 1;
             }
@@ -68,9 +71,11 @@ namespace pentester {
         consteval std::size_t countAmpr() {
             std::size_t result = 0;
             for (std::size_t i = 0; i < str.size; i++) {
-                if (str[i] == '&') {
-                    if (i >= str.size || str[i + 1] != '&') {
+                if (str.data[i] == '&') {
+                    if (i >= str.size || str.data[i + 1] != '&') {
                         result++;
+                    } else {
+                        i += 1;
                     }
                 }
             }
